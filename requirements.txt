@@ -1,0 +1,9 @@
+torch==1.7.0
+torchvision==0.8.1
+dominate==2.6.0
+visdom==0.1.8.9
+scipy
+pillow
+scikit-image
+git+https://github.com/facebookresearch/detectron2.git
+pytorch-fid==0.2.0
