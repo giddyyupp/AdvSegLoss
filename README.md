@@ -6,7 +6,7 @@ Adversarial Segmentation Loss for Sketch Colorization
 
 [comment]: <> ([Paper]&#40;&#41;)
 
-[comment]: <> ([Arxiv]&#40;&#41;)
+[Arxiv](https://arxiv.org/abs/2102.06192)
 
 
 **AdvSegLoss**:
