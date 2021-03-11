@@ -55,13 +55,13 @@ Follow steps in the [datasets.md](docs/datasets.md) to download, and prepare dat
 - Train a model with unpaired training:
 ```bash
 #!./scripts/train_advsegloss.sh
-python train.py --name ade20k_hed_advsegloss_both --dataroot ./datasets/ade20k_hed --model cycle_gan --segmentation --segmentation_output "both" --direction "AtoB" --dataset_mode "unaligned"
+python train.py --checkpoints_dir ./checkpoints --name ade20k_hed_advsegloss_both --dataroot ./datasets/ade20k_hed --model cycle_gan --segmentation --segmentation_output "both" --direction "AtoB" --dataset_mode "unaligned"
 ```
 - To view training results and loss plots, run `python -m visdom.server` and click the URL http://localhost:8097. To see more intermediate results, check out `./checkpoints/maps_cyclegan/web/index.html`
 - Test the model:
 ```bash
 #!./scripts/test_advsegloss.sh
-python test.py --name ade20k_hed_advsegloss_both --dataroot ./datasets/ade20k_hed --model test --segmentation --segmentation_output "both" --direction "AtoB" --dataset_mode "unaligned"
+python test.py --checkpoints_dir ./checkpoints --name ade20k_hed_advsegloss_both --dataroot ./datasets/ade20k_hed --model test --segmentation --segmentation_output "both" --direction "AtoB" --dataset_mode "unaligned"
 ```
 The test results will be saved to a html file here: `./results/ade20k_hed_advsegloss_both/latest_test/index.html`.
 
