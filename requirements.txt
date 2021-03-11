@@ -7,3 +7,5 @@ pillow
 scikit-image
 git+https://github.com/facebookresearch/detectron2.git
 pytorch-fid==0.2.0
+opencv-python
+iopath==0.1.4
