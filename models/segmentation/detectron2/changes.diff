@@ -1,0 +1,65 @@
+diff --git a/detectron2/engine/defaults.py b/detectron2/engine/defaults.py
+index a73ca85..5364266 100644
+--- a/detectron2/engine/defaults.py
++++ b/detectron2/engine/defaults.py
+@@ -205,15 +205,21 @@ class DefaultPredictor:
+                 See :doc:`/tutorials/models` for details about the format.
+         """
+         with torch.no_grad():  # https://github.com/sphinx-doc/sphinx/issues/4258
+-            # Apply pre-processing to image.
+-            if self.input_format == "RGB":
+-                # whether the model expects BGR inputs or RGB
+-                original_image = original_image[:, :, ::-1]
+-            height, width = original_image.shape[:2]
+-            image = self.aug.get_transform(original_image).apply_image(original_image)
+-            image = torch.as_tensor(image.astype("float32").transpose(2, 0, 1))
+-
+-            inputs = {"image": image, "height": height, "width": width}
++            if isinstance(original_image, torch.Tensor):
++                permute = [2, 1, 0]
++                image = (original_image.squeeze(0)[permute, :, :] + 1) / 2.0 * 255.0
++                height, width = image.shape[1:3]
++
++            else:
++                # Apply pre-processing to image.
++                if self.input_format == "RGB":
++                    # whether the model expects BGR inputs or RGB
++                    original_image = original_image[:, :, ::-1]
++                height, width = original_image.shape[:2]
++                image = self.aug.get_transform(original_image).apply_image(original_image)
++                image = torch.as_tensor(image.astype("float32").transpose(2, 0, 1))
++
++            inputs = {"image": image, "height": height, "width": width}  # .squeeze(0)
+             predictions = self.model([inputs])[0]
+             return predictions
+
+diff --git a/detectron2/utils/visualizer.py b/detectron2/utils/visualizer.py
+index e139d5e..dc7e61f 100644
+--- a/detectron2/utils/visualizer.py
++++ b/detectron2/utils/visualizer.py
+@@ -338,17 +338,19 @@ class Visualizer:
+             instance_mode (ColorMode): defines one of the pre-defined style for drawing
+                 instances on an image.
+         """
+-        self.img = np.asarray(img_rgb).clip(0, 255).astype(np.uint8)
++        if img_rgb:
++            self.img = np.asarray(img_rgb).clip(0, 255).astype(np.uint8)
++            self.output = VisImage(self.img, scale=scale)
++            # too small texts are useless, therefore clamp to 9
++            self._default_font_size = max(
++                np.sqrt(self.output.height * self.output.width) // 90, 10 // scale
++            )
++
+         if metadata is None:
+             metadata = MetadataCatalog.get("__nonexist__")
+         self.metadata = metadata
+-        self.output = VisImage(self.img, scale=scale)
+         self.cpu_device = torch.device("cpu")
+
+-        # too small texts are useless, therefore clamp to 9
+-        self._default_font_size = max(
+-            np.sqrt(self.output.height * self.output.width) // 90, 10 // scale
+-        )
+         self._instance_mode = instance_mode
+
+     def draw_instance_predictions(self, predictions):
