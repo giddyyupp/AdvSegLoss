@@ -47,6 +47,9 @@ Or install all deps using pip:
 pip install -r requirements.txt
 ```
 
+Download panoptic segmentation [model](https://dl.fbaipublicfiles.com/detectron2/COCO-PanopticSegmentation/panoptic_fpn_R_50_3x/139514569/model_final_c10459.pkl) 
+from detectron model zoo, and put it under `models/segmentation/detectron2`.
+
 ### AdvSegLoss train/test
 - Download a dataset (e.g. bedroom) and generate edge maps:
 
