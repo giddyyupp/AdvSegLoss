@@ -2,7 +2,7 @@
 
 We provide PyTorch implementation for:
 
-Adversarial Segmentation Loss for Sketch Colorization
+Adversarial Segmentation Loss for Sketch Colorization [ICIP 2021]
 
 [comment]: <> ([Paper]&#40;&#41;)
 
